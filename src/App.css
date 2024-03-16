@@ -4,3 +4,21 @@
   flex-direction: column;
   align-self: center;
 }
+.searching{
+  width: 100%;
+  align-self: center;
+}
+.icon{
+  width: 100px;
+  background-color: rgb(39, 147, 194);
+  border-radius: 25px;
+}
+#map{
+  width:500px;
+  height: 500px;
+}
+.App{
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
