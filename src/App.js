@@ -28,12 +28,13 @@ function App() {
       setvisible(true);
       setdata(datao);
       seterror("");
+      seticon(`https://openweathermap.org/img/wn/${datao.list[0].weather[0].icon}@2x.png`)
     } else {
       seterror("Not Found 404");
     }
   };
   useEffect(() => {
-    search();
+    search('input');
   }, []);
   if (visible) {
     return (
@@ -41,7 +42,7 @@ function App() {
         <YMaps>
           <div ref={refmap}>
             <Map 
-              onClick={(e) => {
+              useEffect={(e) => {
                 console.log(e._sourceEvent.originalEvent.coords);
               }}
               state={{
@@ -52,7 +53,7 @@ function App() {
           </div>
         </YMaps>
         <div className="Weather">
-          <div>
+          <div className="case_1">
             <input
               className="searching"
               ref={inputref}
@@ -66,31 +67,36 @@ function App() {
             >
               SEARCH
             </button>
-            <button
+            {/* <button
               className="search_map"
               onClick={()=>{
-                console.log(refmap.current.firstChild.firstChild.center);
+                console.log(refmap.current.firstChild.firstChild);
                 // search("map");
               }}
             >
               SEARCH MAP
-            </button>
+            </button> */}
           </div>
+          <div className="case_2">
           <div>{errortext}</div>
+              <img className="icon" src={icon}></img>
           {/* <button onClick={fetchmap()}>MAP</button> */}
           <div className="temp">
-            Температура: {Math.round(data.list[0].main.temp)}°C
+            {Math.round(data.list[0].main.temp)}°C
           </div>
+          </div>
+          <div className="case_3">
           <div className="feels_like">
-            Ощущается как: {Math.round(data.list[0].main.feels_like)}°C
+            По ощущению {Math.round(data.list[0].main.feels_like)}°C
           </div>
-          <div className="maxtemp">
-            Максимальная температура: {Math.round(data.list[0].main.temp_max)}°C
+          {/* <div className="maxtemp">
+            Максимальная {Math.round(data.list[0].main.temp_max)}°C
           </div>
           <div className="mintemp">
-            Минимальная температура: {Math.round(data.list[0].main.temp_min)}°C
+            Минимальная {Math.round(data.list[0].main.temp_min)}°C
+          </div> */}
           </div>
-          <img className="icon" src={icon}></img>
+
         </div>
       </div>
     );
