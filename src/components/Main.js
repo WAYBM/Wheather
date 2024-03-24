@@ -36,8 +36,11 @@ export const Main = () => {
       setdata(datao);
       console.log(datao);
       seterror("");
-      if (datao.list[0].weather[0].main == 'Clouds' || datao.list[0].weather[0].main == 'Rain'){
-        setBGImg('https://img.goodfon.ru/original/2048x1263/c/e4/derevya-pole-serye-oblaka.jpg')
+      if (datao.list[0].weather[0].main == 'Clouds'){
+        setBGImg('https://wallpaper.dog/large/20509187.jpg')
+      }
+      if (datao.list[0].weather[0].main == 'Rain') {
+        setBGImg('https://catherineasquithgallery.com/uploads/posts/2023-01/1674324108_catherineasquithgallery-com-p-fon-serie-oblaka-foto-192.jpg')
       }
       seticon(
         `https://openweathermap.org/img/wn/${datao.list[0].weather[0].icon}@2x.png`
@@ -62,7 +65,8 @@ export const Main = () => {
             />
           </div>
         </YMaps>
-        <div className="Weather" style={{ backgroundImage: `url(${BGImg})` }}>
+        <div className="Weather">
+          <div className="case_BG" style={{ backgroundImage: `url(${BGImg})` }}></div>
           <div className="case_1">
             <input
               className="searching"
