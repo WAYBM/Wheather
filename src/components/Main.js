@@ -1,56 +1,44 @@
 // import "./App.css";
 import { useState, useEffect, useRef } from "react";
 import { YMaps, Map } from "@pbe/react-yandex-maps";
+import windIC from "./assets/wind.png"
+import { BG } from "./BG"
+import Calendar from "./Calendar";
 
 export const Main = () => {
   const [BGImg, setBGImg] = useState('')
   const [data, setdata] = useState({});
   const [visible, setvisible] = useState(false);
-  const [town, settown] = useState("yaroslavl");
+  const [town, settown] = useState("Ярославль");
   const [errortext, seterror] = useState("");
   const [icon, seticon] = useState();
-  const [url, seturl] = useState(
-    `https://api.openweathermap.org/data/2.5/forecast?q=${town}&units=metric&appid=1f488e4442a49d96696206fd8b1d75bb`
-  );
   const inputref = useRef("Yaroslavl");
-  const refmap = useRef(null);
-  const search = async (typeofsearch) => {
-    if (inputref.current.value === "") {
-      return 0;
+  const fetchSearch = (url) => {
+    if (inputref.current.value == '') {
+      return 0
     }
-    if (typeofsearch === "input") {
-      seturl(
-        `https://api.openweathermap.org/data/2.5/forecast?q=${town}&units=metric&appid=1f488e4442a49d96696206fd8b1d75bb`
-      );
-    }
-    if (typeofsearch === "map") {
-      seturl(
-        `https://api.openweathermap.org/data/2.5/forecast?lat=${refmap.current._sourceEvent.originalEvent.coords[0]}&lon=${refmap.current._sourceEvent.originalEvent.coords[1]}&units=metric&appid=1f488e4442a49d96696206fd8b1d75bb`
-      );
-    }
-    settown(inputref.current.value);
-    let response = await fetch(url);
-    let datao = await response.json();
-    if (response.ok) {
-      setvisible(true);
-      setdata(datao);
-      console.log(datao);
-      seterror("");
-      if (datao.list[0].weather[0].main == 'Clouds'){
-        setBGImg('https://wallpaper.dog/large/20509187.jpg')
+    console.log(inputref.current.value);
+    setBGImg('https://wallpaper.dog/large/20509187.jpg')
+    fetch(url).then(res => {
+      if (res.ok) {
+        return res.json()
+      } else {
+        return false
       }
-      if (datao.list[0].weather[0].main == 'Rain') {
-        setBGImg('https://catherineasquithgallery.com/uploads/posts/2023-01/1674324108_catherineasquithgallery-com-p-fon-serie-oblaka-foto-192.jpg')
+    }).then(datao => {
+      if (datao != false) {
+        setBGImg(BG(datao.list[0].weather[0].main))
+        seticon(
+          `https://openweathermap.org/img/wn/${datao.list[0].weather[0].icon}@2x.png`
+        );
+        setdata(datao)
+        console.log(datao);
+        setvisible(true)
       }
-      seticon(
-        `https://openweathermap.org/img/wn/${datao.list[0].weather[0].icon}@2x.png`
-      );
-    } else {
-      seterror("Not Found 404");
-    }
-  };
+    }).catch((e) => console.log(e))
+  }
   useEffect(() => {
-    search("input");
+    fetchSearch(`https://api.openweathermap.org/data/2.5/forecast?q=${town}&units=metric&appid=1f488e4442a49d96696206fd8b1d75bb`);
   }, []);
   if (visible) {
     return (
@@ -76,42 +64,34 @@ export const Main = () => {
             />
             <button
               onClick={() => {
-                search("input");
+                settown(inputref.current.value);
+                fetchSearch(`https://api.openweathermap.org/data/2.5/forecast?q=${inputref.current.value}&units=metric&appid=1f488e4442a49d96696206fd8b1d75bb`);
               }}
             >
               SEARCH
             </button>
-            {/* <button
-              className="search_map"
-              onClick={()=>{
-                console.log(refmap.current.firstChild.firstChild);
-                // search("map");
-              }}
-            >
-              SEARCH MAP
-            </button> */}
           </div>
           <div className="case_2">
             <div>{errortext}</div>
             <img className="icon" src={icon}></img>
-            {/* <button onClick={fetchmap()}>MAP</button> */}
             <div className="temp">{Math.round(data.list[0].main.temp)}°C</div>
           </div>
           <div className="case_3">
             <div className="feels_like">
               По ощущению {Math.round(data.list[0].main.feels_like)}°C
             </div>
-            {/* <div className="maxtemp">
-            Максимальная {Math.round(data.list[0].main.temp_max)}°C
-          </div>
-          <div className="mintemp">
-            Минимальная {Math.round(data.list[0].main.temp_min)}°C
-          </div> */}
+            <div className="wind">
+              <p>
+                Ветер {Math.round(data.list[0].wind.speed)} м/с
+              </p>
+              <img src={windIC} className="windIMG"></img>
+            </div>
           </div>
         </div>
+        <Calendar dates={data.list} />
       </div>
     );
   } else {
-    return <div style={{ margin: "auto" }}>Loading...</div>;
+    return <div style={{ pading: "auto" }}>Loading...</div>;
   }
 };
