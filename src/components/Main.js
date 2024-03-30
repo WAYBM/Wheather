@@ -88,7 +88,7 @@ export const Main = () => {
             </div>
           </div>
         </div>
-        <Calendar dates={data.list} />
+        <Calendar dates={data.list}/>
       </div>
     );
   } else {
