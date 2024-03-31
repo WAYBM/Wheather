@@ -87,7 +87,7 @@ button {
   justify-content: center;
 }
 .Calendar{
-  width: 70%;
+  width: 100%;
   display: flex;
   flex-flow: wrap;
   flex-direction: row;
@@ -95,7 +95,9 @@ button {
   align-items: start;
 }
 .dates{
-  transition: 0.5s;
+  display: flex;
+  flex-direction: column;
+  transition: 0.35s;
   margin-top: 10px;
   width: 15%;
   height: 25%;
