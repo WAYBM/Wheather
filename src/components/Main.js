@@ -13,32 +13,13 @@ export const Main = () => {
   const [errortext, seterror] = useState("");
   const [icon, seticon] = useState();
   const [day, setday] = useState(0)
+  const [selected, setselected] = useState(null)
   const [time, settime] = useState(null)
   const inputref = useRef("Yaroslavl");
-  const setting_day = (e) => {
-    let date = new Date();
-    let mass = []
-    for (let i = 0; i < data.list.length; i++) {
-      if (data.list[i].dt_txt.substring(8, 10) == Number(e.id)) {
-        mass.push({ num: i, time: data.list[i].dt_txt.substring(11, 13) })
-      }
-    }
-    if (mass[0].num != 0) {
-      setday(mass[4].num)
-      settime(`${mass[4].time}:00`)
-    } else {
-      setday(0)
-      settime(`${date.getHours()}:${date.getMinutes()}`)
-    }
-    setBGImg(BG(data.list[day].weather[0].main))
-    seticon(`https://openweathermap.org/img/wn/${data.list[day].weather[0].icon}@2x.png`) 
-    console.log(mass);
-  }
   const fetchSearch = (url) => {
     if (inputref.current.value == '') {
       return 0
     }
-    setBGImg('https://wallpaper.dog/large/20509187.jpg')
     fetch(url).then(res => {
       if (res.ok) {
         return res.json()
@@ -47,29 +28,40 @@ export const Main = () => {
       }
     }).then(datao => {
       if (datao != false) {
-        setBGImg(BG(datao.list[day].weather[0].main))
-        seticon(
-          `https://openweathermap.org/img/wn/${datao.list[day].weather[0].icon}@2x.png`
-        );
         setdata(datao)
         console.log(datao);
         setvisible(true)
       }
     }).catch((e) => console.log(e))
   }
-  
+  useEffect(()=>{
+    if (visible) {
+      setBGImg(BG(data.list[day].weather[0].main))
+      seticon(`https://openweathermap.org/img/wn/${data.list[day].weather[0].icon}@2x.png`) 
+    }
+  },[data,day,time,town])
+  useEffect(()=>{
+    if (selected!==null) {
+      let date = new Date();
+      let mass = []
+      for (let i = 0; i < data.list.length; i++) {
+        if (data.list[i].dt_txt.substring(8, 10) == Number(selected.id)) {
+          mass.push({ num: i, time: data.list[i].dt_txt.substring(11, 13)})
+        }
+      }
+      if (mass[0].num != 0) {
+        console.log(mass[4].num);
+        setday(mass[4].num)
+        settime(`${mass[4].time}:00`)
+      } else {
+        setday(0)
+        settime(`${date.getHours()}:${date.getMinutes()}`)
+      }
+    }
+  },[selected])
   useEffect(() => {
     fetchSearch(`https://api.openweathermap.org/data/2.5/forecast?q=${town}&units=metric&appid=1f488e4442a49d96696206fd8b1d75bb`);
   }, []);
-  // useEffect(()=>{
-  //   if (data.list[day].weather[0].main == undefined) {
-  //     console.log('cock');
-  //     return 0
-  //   }else{
-  //     setBGImg(BG(data.list[day].weather[0].main))
-  //     seticon(`https://openweathermap.org/img/wn/${data.list[day].weather[0].icon}@2x.png`) 
-  //   }
-  // },[day])
   if (visible) {
     return (
       <div className="App">
@@ -83,8 +75,7 @@ export const Main = () => {
             />
           </div>
         </YMaps>
-        <div className="Weather">
-          <div className="case_BG" style={{ backgroundImage: `url(${BGImg})` }}></div>
+        <div className="wApp">
           <div className="case_1">
             <input
               className="searching"
@@ -92,7 +83,7 @@ export const Main = () => {
               type="search"
               placeholder="Yaroslavl"
             />
-            <button
+            <button className="searchbutton"
               onClick={() => {
                 settown(inputref.current.value);
                 fetchSearch(`https://api.openweathermap.org/data/2.5/forecast?q=${inputref.current.value}&units=metric&appid=1f488e4442a49d96696206fd8b1d75bb`);
@@ -101,6 +92,8 @@ export const Main = () => {
               SEARCH
             </button>
           </div>
+        <div className="Weather">
+          <div className="case_BG" style={{ backgroundImage: `url(${BGImg})` }}></div>
           <div className="case_2">
             <div>{errortext}</div>
             <img className="icon" src={icon}></img>
@@ -119,18 +112,20 @@ export const Main = () => {
             </div>
           </div>
         </div>
-        <div style={{ width: '70%' }} className="helpjer" onClick={(e) => {
+        <div style={{ width: '100%' }} className="helpjer" onClick={(e) => {
           if (e.target.className === "dates" || e.target.parentNode.className === 'dates') {
             if (e.target.parentNode.className === 'dates') {
-              setting_day(e.target.parentNode)
+              setselected(e.target.parentNode)
             } else {
-              setting_day(e.target)
+              setselected(e.target)
             }
           }
         }}>
           <Calendar dates={data.list} />
         </div>
       </div>
+
+        </div>
     );
   } else {
     return <div style={{ pading: "auto" }}>Loading...</div>;

@@ -1,4 +1,5 @@
 .Weather {
+  margin-top: 10px;
   width: 300px;
   height: 400px;
   color: white;
@@ -7,17 +8,19 @@
   flex-direction: column;
   align-self: center;
   position: relative;
+  transition: 0.5s;
 
 }
 
 .searching {
   padding-left: 10px;
-  border-radius: 10px;
+  border-radius: 5px;
   border: none;
   outline: none;
   width: 65%;
-  height: 25px;
+  height: 40px;
   align-self: center;
+  border: 0.2rem outset lightgray;
 }
 
 .icon {
@@ -35,8 +38,9 @@
 }
 
 .case_1 {
+  width: 100%;
   display: flex;
-  justify-content: space-evenly;
+  justify-content: center;
   margin-top: 10px;
   display: flex;
   flex-direction: row;
@@ -47,13 +51,6 @@
   align-self: center;
   flex-direction: row;
   align-items: center;
-}
-
-button {
-  border-radius: 15px;
-  border: none;
-  outline: none;
-  height: auto;
 }
 
 .temp {
@@ -95,13 +92,14 @@ button {
   align-items: start;
 }
 .dates{
+  color: white;
   display: flex;
   flex-direction: column;
   transition: 0.35s;
   margin-top: 10px;
   width: 15%;
   height: 25%;
-  font-size: x-large;
+  font-size: xx-large;
   font-weight: 700;
   text-align: center;
   vertical-align: middle;
@@ -110,6 +108,27 @@ button {
   border-radius: 5%;
 }
 .dates:hover{
+  background: grey;
+  color: grey;
+}
+.specicon{ 
+  width: 100px;
+  align-self: center;
+}
+.wApp{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  flex-direction: column;
+}
+.searchbutton{
+  transition: 0.2s;
+  border-radius: 5px;
+  border: none;
+  outline: none;
+}
+.searchbutton:hover{
   background: grey;
   color: white;
 }
