@@ -4,6 +4,7 @@ import { YMaps, Map } from "@pbe/react-yandex-maps";
 import windIC from "./assets/wind.png"
 import { BG } from "./BG"
 import Calendar from "./Calendar";
+import Statistics from "./Statistics";
 
 export const Main = () => {
   const [BGImg, setBGImg] = useState('')
@@ -15,6 +16,7 @@ export const Main = () => {
   const [day, setday] = useState(0)
   const [selected, setselected] = useState(null)
   const [time, settime] = useState(null)
+  const [date, setdate] = useState(null)
   const inputref = useRef("Yaroslavl");
   const fetchSearch = (url) => {
     if (inputref.current.value == '') {
@@ -40,6 +42,11 @@ export const Main = () => {
       seticon(`https://openweathermap.org/img/wn/${data.list[day].weather[0].icon}@2x.png`) 
     }
   },[data,day,time,town])
+  const getMonthName = (MonthNum) =>{
+    let date = new Date()
+    date.setMonth(MonthNum - 1)
+    return date.toLocaleString('ru', {month:'long'})
+  }
   useEffect(()=>{
     if (selected!==null) {
       let date = new Date();
@@ -50,11 +57,13 @@ export const Main = () => {
         }
       }
       if (mass[0].num != 0) {
+        setdate(`${data.list[mass[4].num].dt_txt.substring(8, 10)} ${getMonthName(data.list[mass[4].num].dt_txt.substring(5, 7))}`)
         console.log(mass[4].num);
         setday(mass[4].num)
         settime(`${mass[4].time}:00`)
       } else {
         setday(0)
+        setdate(`${date.getDay()} ${getMonthName(date.getMonth())}`)
         settime(`${date.getHours()}:${date.getMinutes()}`)
       }
     }
@@ -65,16 +74,6 @@ export const Main = () => {
   if (visible) {
     return (
       <div className="App">
-        <YMaps>
-          <div>
-            <Map
-              state={{
-                center: [data.city.coord.lat, data.city.coord.lon],
-                zoom: 11,
-              }}
-            />
-          </div>
-        </YMaps>
         <div className="wApp">
           <div className="case_1">
             <input
@@ -92,6 +91,18 @@ export const Main = () => {
               SEARCH
             </button>
           </div>
+        <div className="map_and_weather">
+        <YMaps>
+          <div>
+            <Map
+            height={400}
+              state={{
+                center: [data.city.coord.lat, data.city.coord.lon],
+                zoom: 11,
+              }}
+            />
+          </div>
+        </YMaps>
         <div className="Weather">
           <div className="case_BG" style={{ backgroundImage: `url(${BGImg})` }}></div>
           <div className="case_2">
@@ -100,6 +111,7 @@ export const Main = () => {
             <div className="temp">{Math.round(data.list[day].main.temp)}°C</div>
           </div>
           <div className="case_3">
+            <div>{date}</div>
             <div>{time}</div>
             <div className="feels_like">
               По ощущению {Math.round(data.list[day].main.feels_like)}°C
@@ -112,7 +124,9 @@ export const Main = () => {
             </div>
           </div>
         </div>
-        <div style={{ width: '100%' }} className="helpjer" onClick={(e) => {
+          <Statistics dates={data.list} day = {day}/>
+        </div>
+        <div style={{ width: '80%' }} className="helpjer" onClick={(e) => {
           if (e.target.className === "dates" || e.target.parentNode.className === 'dates') {
             if (e.target.parentNode.className === 'dates') {
               setselected(e.target.parentNode)
@@ -121,7 +135,7 @@ export const Main = () => {
             }
           }
         }}>
-          <Calendar dates={data.list} />
+          <Calendar dates={data.list}/>
         </div>
       </div>
 
