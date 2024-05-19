@@ -152,3 +152,7 @@ p{
   margin-left: 10px;
   border-radius: 5%;
 }
+.Main3{
+  display: flex;
+  flex-direction: row;
+}

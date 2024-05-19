@@ -5,6 +5,7 @@ import windIC from "./assets/wind.png"
 import { BG } from "./BG"
 import Calendar from "./Calendar";
 import Statistics from "./Statistics";
+import Wind from "./Wind"
 
 export const Main = () => {
   const [BGImg, setBGImg] = useState('')
@@ -19,6 +20,7 @@ export const Main = () => {
   const [date, setdate] = useState(null)
 
   const inputref = useRef("Yaroslavl");
+  const dayref = useRef(0)
 
   const fetchSearch = (url) => {
     if (inputref.current.value == '') {
@@ -33,31 +35,29 @@ export const Main = () => {
     }).then(datao => {
       if (datao != false) {
         setdata(datao)
-        console.log(datao);
         setvisible(true)
-        console.log('cock');
       }
     }).catch((e) => console.log(e))
   }
 
   useEffect(() => {
     if (visible) {
-      setBGImg(BG(data.list[day].weather[0].main))
-      seticon(`https://openweathermap.org/img/wn/${data.list[day].weather[0].icon}@2x.png`)
+      setBGImg(BG(data.list[dayref.current].weather[0].main))
+      seticon(`https://openweathermap.org/img/wn/${data.list[dayref.current].weather[0].icon}@2x.png`)
     }
-  }, [data, day, time, town])
+  }, [data, dayref.current, time, town])
 
   const getMonthName = (MonthNum) => {
     let date = new Date()
     date.setMonth(MonthNum - 1)
     return date.toLocaleString('ru', { month: 'long' })
   }
-  const middleNum = (mass)=>{
+  const middleNum = (mass) => {
     let count = 0
-    mass.map((e)=>{
+    mass.map((e) => {
       count += 1
     })
-    return Math.round(count/2)
+    return Math.round(count / 2)
   }
   useEffect(() => {
     if (selected !== null) {
@@ -69,15 +69,14 @@ export const Main = () => {
         }
       }
       if (mass[0].num != 0) {
-        console.log(middleNum(mass));
         setdate(`${data.list[mass[middleNum(mass)].num].dt_txt.substring(8, 10)} ${getMonthName(data.list[mass[middleNum(mass)].num].dt_txt.substring(5, 7))}`)
-        console.log(mass[middleNum(mass)].num);
-        setday(mass[middleNum(mass)].num)
+        dayref.current = mass[0].num
         settime(`${mass[middleNum(mass)].time}:00`)
       } else {
-        setday(`${date.getDate()}`)
-        setdate(`${date.getDate()} ${getMonthName(date.getMonth()+1)}`)
+        dayref.current = 0
+        setdate(`${date.getDate()} ${getMonthName(date.getMonth() + 1)}`)
         settime(`${date.getHours()}:${date.getMinutes()}`)
+        console.log(dayref.current);
       }
     }
   }, [selected])
@@ -102,7 +101,7 @@ export const Main = () => {
                 settown(inputref.current.value);
                 fetchSearch(`https://api.openweathermap.org/data/2.5/forecast?q=${inputref.current.value}&units=metric&appid=1f488e4442a49d96696206fd8b1d75bb`);
               }}
-              
+
             >search</button>
           </div>
           <div style={{ width: '100%' }} className="helpjer" onClick={(e) => {
@@ -118,38 +117,42 @@ export const Main = () => {
           </div>
         </div>
         <div className="Main">
-          <div className="Weather" style={{backgroundImage: `url(${BGImg})`}}>
+          <div className="Weather" style={{ backgroundImage: `url(${BGImg})` }}>
             <div className="case_2">
               <div>{errortext}</div>
               <img className="icon" src={icon}></img>
-              <div className="temp">{Math.round(data.list[day].main.temp)}°C</div>
+              <div className="temp">{Math.round(data.list[dayref.current].main.temp)}°C</div>
             </div>
             <div className="case_3">
               <div>{date}</div>
               <div>{time}</div>
               <div className="feels_like">
-                По ощущениям {Math.round(data.list[day].main.feels_like)}°C
+                По ощущениям {Math.round(data.list[dayref.current].main.feels_like)}°C
               </div>
             </div>
           </div>
           <div className="Main2">
-          <Statistics dates={data.list} day={day} />
-        <YMaps>
-              <div className="map">
-                <Map
-                  height={400}
-                  state={{
-                    center: [data.city.coord.lat, data.city.coord.lon],
-                    zoom: 11,
-                  }}
-                />
-              </div>
-            </YMaps>
+            <Statistics dates={data.list} day={dayref.current} />
+            <div className="Main3">
+              <YMaps>
+                <div className="map">
+                  <Map
+                    height={400}
+                    state={{
+                      center: [data.city.coord.lat, data.city.coord.lon],
+                      zoom: 11,
+                    }}
+                  />
+                </div>
+              </YMaps>
+              <Wind dates={data.list} day={dayref.current} />
+
+            </div>
           </div>
         </div>
       </div>
-)
-  }else{
+    )
+  } else {
     return <div style={{ pading: "auto" }}>Loading...</div>;
   }
 

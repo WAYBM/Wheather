@@ -62,12 +62,21 @@ export default function Calendar({ dates }) {
         if (document.querySelectorAll('.dates').length < 1) {
             for (let i = 0; i < dates.length; i++) {
                 if (massDate.current[massDate.current.length - 1] != dates[i].dt_txt.substring(8, 10)) {
-                    massDate.current.push(dates[i].dt_txt.substring(8, 10))
-                    const key = i
-                    const value = dates[i]
-                    massTime.push(dates[i].dt_txt.substring(5, 7))
-                    massObj.push(dates[i])
-                    massNum.current.push(i)
+                    if (dates[i].dt_txt.substring(11,13) == '12') {
+                        massDate.current.push(dates[i].dt_txt.substring(8, 10))
+                        const key = i
+                        const value = dates[i]
+                        massTime.push(dates[i].dt_txt.substring(5, 7))
+                        massObj.push(dates[i])
+                        massNum.current.push(i) 
+                    } else if(Number(dates[i].dt_txt.substring(8, 10))==date.getDate()){
+                        massDate.current.push(dates[i].dt_txt.substring(8, 10))
+                        const key = i
+                        const value = dates[i]
+                        massTime.push(dates[i].dt_txt.substring(5, 7))
+                        massObj.push(dates[i])
+                        massNum.current.push(i) 
+                    }
                 }
             }
             console.log(massObj, ' ', massDate.current, ' ', massNum.current, ' ', massTime);
@@ -81,7 +90,7 @@ export default function Calendar({ dates }) {
                 <div class = "baseinfo">
                     <p id='temp'>${MaxTemperatureOfTheDay(massDate.current[i])}°C</p>
                 </div>
-                </div>` )
+                </div>`)
             }
         }
     }, [dates])

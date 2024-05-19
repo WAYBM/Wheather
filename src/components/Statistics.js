@@ -15,11 +15,9 @@ export default function Statistics({ day, dates }) {
                 <p>${dates[i].dt_txt.substring(11, 16)}</p>
                 <p>${dates[i].wind.speed} м/c</p>
             </div>`)
-        console.log(dates[i]);
         massEl.current.push(dates[i])
       }
     }
-    console.log(massEl.current);
   }, [dates, day])
   return (
     <div className="Statistics" ref={calref}>
