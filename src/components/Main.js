@@ -52,7 +52,13 @@ export const Main = () => {
     date.setMonth(MonthNum - 1)
     return date.toLocaleString('ru', { month: 'long' })
   }
-
+  const middleNum = (mass)=>{
+    let count = 0
+    mass.map((e)=>{
+      count += 1
+    })
+    return Math.round(count/2)
+  }
   useEffect(() => {
     if (selected !== null) {
       let date = new Date();
@@ -63,13 +69,14 @@ export const Main = () => {
         }
       }
       if (mass[0].num != 0) {
-        setdate(`${data.list[mass[4].num].dt_txt.substring(8, 10)} ${getMonthName(data.list[mass[4].num].dt_txt.substring(5, 7))}`)
-        console.log(mass[4].num);
-        setday(mass[4].num)
-        settime(`${mass[4].time}:00`)
+        console.log(middleNum(mass));
+        setdate(`${data.list[mass[middleNum(mass)].num].dt_txt.substring(8, 10)} ${getMonthName(data.list[mass[middleNum(mass)].num].dt_txt.substring(5, 7))}`)
+        console.log(mass[middleNum(mass)].num);
+        setday(mass[middleNum(mass)].num)
+        settime(`${mass[middleNum(mass)].time}:00`)
       } else {
-        setday(0)
-        setdate(`${date.getDay()} ${getMonthName(date.getMonth())}`)
+        setday(`${date.getDate()}`)
+        setdate(`${date.getDate()} ${getMonthName(date.getMonth()+1)}`)
         settime(`${date.getHours()}:${date.getMinutes()}`)
       }
     }
@@ -128,7 +135,7 @@ export const Main = () => {
           <div className="Main2">
           <Statistics dates={data.list} day={day} />
         <YMaps>
-              <div>
+              <div className="map">
                 <Map
                   height={400}
                   state={{

@@ -39,6 +39,18 @@ export default function Calendar({ dates }) {
         date.setMonth(MonthNum - 1)
         return date.toLocaleString('ru', { month: 'long' })
     }
+     const MaxTemperatureOfTheDay = (day) =>{
+        let max = 0
+        for (let i = 0; i < dates.length; i++) {
+            if (dates[i].dt_txt.substring(8,10)==day) {
+                if (max<dates[i].main.temp) {
+                    max = Math.round(dates[i].main.temp)
+                }
+            }
+            
+        }
+        return max
+     }
     useEffect(() => {
         let date = new Date();
         let cal = document.getElementsByClassName('.Calendar')
@@ -61,13 +73,13 @@ export default function Calendar({ dates }) {
             console.log(massObj, ' ', massDate.current, ' ', massNum.current, ' ', massTime);
             for (let i = 0; i < massDate.current.length; i++) {
                 calref.current.insertAdjacentHTML('beforeEnd', `<div class="dates"  id=${massDate.current[i]}>
-                <img class="specicon" src='${`https://openweathermap.org/img/wn/${massObj[i].weather[0].icon}@2x.png`}'/>
                 <div class="dlc">
+                    <img class="specicon" src='${`https://openweathermap.org/img/wn/${massObj[i].weather[0].icon}@2x.png`}'/>
                     <p>${massDate.current[i]}</p>
                     <p>${getMonthName(massTime[i])}</p>
                 </div>
                 <div class = "baseinfo">
-                    <p id='temp'>${Math.round(massObj[i].main.temp)}°C</p>
+                    <p id='temp'>${MaxTemperatureOfTheDay(massDate.current[i])}°C</p>
                 </div>
                 </div>` )
             }

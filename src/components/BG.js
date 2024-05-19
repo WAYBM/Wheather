@@ -1,6 +1,6 @@
 export const BG = (type) => {
     if (type == 'Clouds') {
-        return 'https://wallpaper.dog/large/20509187.jpg'
+        return 'https://mykaleidoscope.ru/uploads/posts/2022-08/1659732929_65-mykaleidoscope-ru-p-oblako-detskoe-dizain-krasivo-foto-70.jpg'
     }
     if (type == 'Rain') {
         return 'https://catherineasquithgallery.com/uploads/posts/2023-01/1674324108_catherineasquithgallery-com-p-fon-serie-oblaka-foto-192.jpg'
