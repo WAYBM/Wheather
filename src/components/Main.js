@@ -34,6 +34,7 @@ export const Main = () => {
       }
     }).then(datao => {
       if (datao != false) {
+        console.log(datao);
         setdata(datao)
         setvisible(true)
       }
@@ -82,7 +83,7 @@ export const Main = () => {
   }, [selected])
 
   useEffect(() => {
-    fetchSearch(`https://api.openweathermap.org/data/2.5/forecast?q=${town}&units=metric&appid=1f488e4442a49d96696206fd8b1d75bb`);
+    fetchSearch(`https://api.openweathermap.org/data/2.5/forecast?q=${town}&units=metric&appid=7b8d726b477ecccbee3bb3d359cb8ebf`);
   }, []);
 
   if (visible) {
@@ -99,7 +100,7 @@ export const Main = () => {
             <button className="searchbutton"
               onClick={() => {
                 settown(inputref.current.value);
-                fetchSearch(`https://api.openweathermap.org/data/2.5/forecast?q=${inputref.current.value}&units=metric&appid=1f488e4442a49d96696206fd8b1d75bb`);
+                fetchSearch(`https://api.openweathermap.org/data/2.5/forecast?q=${inputref.current.value}&units=metric&appid=7b8d726b477ecccbee3bb3d359cb8ebf`);
               }}
 
             >search</button>
